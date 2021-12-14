@@ -9,7 +9,13 @@ Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{product:slug}', [ProductController::class, 'show']);
 
 Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
 
-Route::post('/products', [ProductController::class, 'store'])->middleware('auth:sanctum');
-Route::put('/products/{product:slug}', [ProductController::class, 'update'])->middleware('auth:sanctum');
-Route::delete('/products/{product:slug}', [ProductController::class, 'delete'])->middleware('auth:sanctum');
+Route::group(['middleware' => ['auth:sanctum']], function() {
+    Route::post('/products', [ProductController::class, 'store']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::put('/products/{product:slug}', [ProductController::class, 'update']);
+    Route::delete('/products/{product:slug}', [ProductController::class, 'delete']);
+    Route::get('/products/search/{name}', [ProductController::class, 'search']);
+});
+

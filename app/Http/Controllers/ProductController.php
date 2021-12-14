@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -18,6 +19,15 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         return ProductResource::make($product);
+    }
+
+    public function search($name)
+    {
+        $products = Product::query()
+            ->where('name', 'LIKE', "%{$name}%")
+            ->get();
+
+        return ProductResource::collection($products);
     }
 
     public function store(Request $request)
